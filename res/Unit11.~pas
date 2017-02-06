@@ -1,0 +1,82 @@
+unit Unit11;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, StdCtrls, jpeg, ExtCtrls;
+
+type
+  TForm11 = class(TForm)
+    bg: TImage;
+    Label1: TLabel;
+    Edit1: TEdit;
+    Label2: TLabel;
+    Edit2: TEdit;
+    Label3: TLabel;
+    Edit3: TEdit;
+    Label4: TLabel;
+    Edit4: TEdit;
+    save: TImage;
+    Memo1: TMemo;
+    Label5: TLabel;
+    Label6: TLabel;
+    procedure FormShow(Sender: TObject);
+    procedure saveClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form11: TForm11;     id,pas:string;
+
+implementation
+
+uses Unit1;
+
+{$R *.dfm}
+
+procedure TForm11.FormShow(Sender: TObject);
+begin
+edit1.Text:=form1.edit5.Text;
+pas:=form1.edit6.text;
+id:=form1.Edit5.Text;
+end;
+
+procedure TForm11.saveClick(Sender: TObject);
+var
+i:integer;
+begin
+   if edit1.Text<>id then begin
+      if edit2.Text=pas then begin
+         memo1.Lines.LoadFromFile('admin.dat');
+         for i:=1 to length(edit1.text) do
+            memo1.li
+         memo1.Lines[0]:=edit1.Text+'%oih12obhkg*9p128';
+         memo1.Lines.SaveToFile('admin.dat');
+         label5.Show;
+         label6.Show;
+      end else
+         ShowMessage('Enter Password for change ID!');
+   end;
+   if edit3.Text<>'' then begin
+      if edit2.Text=pas then begin
+         if edit3.Text=edit4.Text then begin
+            if length(edit3.Text)>5 then begin
+               memo1.Lines.LoadFromFile('admin.dat');
+               memo1.Lines[2]:=edit3.Text+'%jbcq90bob1*0j';
+               memo1.Lines.SaveToFile('admin.dat');
+               label5.Show;
+               label6.Show;
+            end else
+              ShowMessage('Password must be more then 5 simbol!')
+         end else
+           ShowMessage('New Password doesn''t match!')
+      end else
+         ShowMessage('Enter Password for change Password!');
+   end
+end;
+
+end.

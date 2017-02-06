@@ -1,0 +1,1023 @@
+unit Unit1;
+
+interface
+
+uses
+  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
+  Dialogs, jpeg, ExtCtrls, XPMaN, CPort, StdCtrls, ShellAPI;
+
+type
+  TForm1 = class(TForm)
+    bg: TImage;
+    ComPort1: TComPort;
+    settingbtn: TImage;
+    about: TImage;
+    Label1: TLabel;
+    Label2: TLabel;
+    switch10: TImage;
+    Timer1: TTimer;
+    Timer2: TTimer;
+    Timer3: TTimer;
+    Timer4: TTimer;
+    switch11: TImage;
+    Edit1: TEdit;
+    Edit2: TEdit;
+    Edit3: TEdit;
+    Edit4: TEdit;
+    table1free: TImage;
+    table1busy: TImage;
+    Memo1: TMemo;
+    historybtn1: TImage;
+    table1label: TLabel;
+    switch20: TImage;
+    switch21: TImage;
+    table2free: TImage;
+    table2busy: TImage;
+    Image1: TImage;
+    table2label: TLabel;
+    switch30: TImage;
+    switch31: TImage;
+    table3free: TImage;
+    table3busy: TImage;
+    Image2: TImage;
+    table3label: TLabel;
+    switch40: TImage;
+    switch41: TImage;
+    table4free: TImage;
+    table4busy: TImage;
+    Image3: TImage;
+    table4label: TLabel;
+    historyframe: TImage;
+    historybtn: TImage;
+    clarehistorybtn: TImage;
+    remoteframe: TImage;
+    temperatureframe: TImage;
+    Label3: TLabel;
+    timebg: TImage;
+    txttimes: TLabel;
+    Timer5: TTimer;
+    loginbtn: TImage;
+    loginadmin: TCheckBox;
+    logoutbtn: TImage;
+    cash1label: TLabel;
+    cash2label: TLabel;
+    cash3label: TLabel;
+    cash4label: TLabel;
+    Timer6: TTimer;
+    Timer7: TTimer;
+    Timer8: TTimer;
+    Timer9: TTimer;
+    historyback: TImage;
+    admin: TImage;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    procedure settingbtnClick(Sender: TObject);
+    procedure switch10Click(Sender: TObject);
+    procedure Timer1Timer(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure switch11Click(Sender: TObject);
+    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+    procedure historybtn1Click(Sender: TObject);
+    procedure switch20Click(Sender: TObject);
+    procedure Timer2Timer(Sender: TObject);
+    procedure switch21Click(Sender: TObject);
+    procedure switch31Click(Sender: TObject);
+    procedure switch30Click(Sender: TObject);
+    procedure Timer3Timer(Sender: TObject);
+    procedure switch40Click(Sender: TObject);
+    procedure switch41Click(Sender: TObject);
+    procedure Timer4Timer(Sender: TObject);
+    procedure aboutClick(Sender: TObject);
+    procedure historybtnClick(Sender: TObject);
+    procedure clarehistorybtnClick(Sender: TObject);
+    procedure Timer5Timer(Sender: TObject);
+    procedure loginbtnClick(Sender: TObject);
+    procedure logoutbtnClick(Sender: TObject);
+    procedure Timer6Timer(Sender: TObject);
+    procedure Timer7Timer(Sender: TObject);
+    procedure Timer8Timer(Sender: TObject);
+    procedure Timer9Timer(Sender: TObject);
+    procedure adminClick(Sender: TObject);
+  private
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+
+var
+  Form1: TForm1; table1time,table2time,table3time,table4time,t1chashcnt,t2chashcnt,t3chashcnt,t4chashcnt:longint; 
+  dir:string; ft1,ft2,ft3,ft4:boolean; NewDate : TDateTime; edittime1,edittime2,edittime3,edittime4:integer;
+  t1done,t2done,t3done,t4done,forceclose1,forceclose2,forceclose3,forceclose4,login:boolean;
+  totalcash:real;
+implementation
+
+uses Unit3, Unit4, Unit5, Unit6, Unit8, Unit7, Unit9, Unit10, Unit11;
+
+{$R *.dfm}
+
+procedure TForm1.settingbtnClick(Sender: TObject);
+begin
+   ComPort1.ShowSetupDialog;
+end;
+//fulis datvla
+function cntcash(t:integer):string;
+var
+  cashback:real; cashbackasstring:string;
+begin
+   cashback:=(5*t)/3600;
+   cashbackasstring:=FormatFloat('#0.00', cashback);
+   result:=cashbackasstring;
+end;
+//magida 1 chartva
+procedure TForm1.switch10Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+   table1form.show;
+end;
+
+function sumcash(T:real):string;
+begin
+
+end;
+
+function timetolabeltabel1(Sec: Integer): string;
+var
+   H, M, S: string;
+   ZH, ZM, ZS: Integer;
+begin
+   ZH := Sec div 3600;
+   ZM := Sec div 60 - ZH * 60;
+   ZS := Sec - (ZH * 3600 + ZM * 60) ;
+   H := IntToStr(ZH) ;
+   M := IntToStr(ZM) ;
+   S := inttostr(ZS) ;
+   Result := H + ':' + M + ':'+ S;
+end;
+
+function timetolabeltabel2(Sec: Integer): string;
+var
+   H, M, S: string;
+   ZH, ZM, ZS: Integer;
+begin
+   ZH := Sec div 3600;
+   ZM := Sec div 60 - ZH * 60;
+   ZS := Sec - (ZH * 3600 + ZM * 60) ;
+   H := IntToStr(ZH) ;
+   M := IntToStr(ZM) ;
+   S := inttostr(ZS) ;
+   Result := H + ':' + M + ':'+ S;
+end;
+
+function timetolabeltabel3(Sec: Integer): string;
+var
+   H, M, S: string;
+   ZH, ZM, ZS: Integer;
+begin
+   ZH := Sec div 3600;
+   ZM := Sec div 60 - ZH * 60;
+   ZS := Sec - (ZH * 3600 + ZM * 60) ;
+   H := IntToStr(ZH) ;
+   M := IntToStr(ZM) ;
+   S := inttostr(ZS) ;
+   Result := H + ':' + M + ':'+ S;
+end;
+
+function timetolabeltabel4(Sec: Integer): string;
+var
+   H, M, S: string;
+   ZH, ZM, ZS: Integer;
+begin
+   ZH := Sec div 3600;
+   ZM := Sec div 60 - ZH * 60;
+   ZS := Sec - (ZH * 3600 + ZM * 60) ;
+   H := IntToStr(ZH) ;
+   M := IntToStr(ZM) ;
+   S := inttostr(ZS) ;
+   Result := H + ':' + M + ':'+ S;
+end;
+
+function SecToTime(Sec: Integer): string;
+var
+   H, M, S: string;
+   ZH, ZM, ZS: Integer;
+begin
+   ZH := Sec div 3600;
+   ZM := Sec div 60 - ZH * 60;
+   ZS := Sec - (ZH * 3600 + ZM * 60) ;
+   H := IntToStr(ZH) ;
+   M := IntToStr(ZM) ;
+   Result := ''+H + ' Hour and ' + M + ' Minute';
+end;
+
+procedure TForm1.Timer1Timer(Sender: TObject);
+var
+   numline:string; i,num:integer;
+   today : TDateTime;
+begin
+   if strtoint(edit1.Text)>0 then  begin
+      //trig once
+      if ft1=false then   begin
+         t1chashcnt:=0;
+         Comport1.WriteStr('1');
+         switch11.show;
+         switch10.Hide;
+         table1busy.show;
+         table1free.Hide;
+         ft1:=true;
+         num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         if odd(num) then begin
+            memo1.Lines.Add('  <tr bgcolor="#9999CC">');
+         end else begin
+            memo1.Lines.Add('  <tr bgcolor="#669999">')
+         end;
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-1 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>The time could not be determined. crashed shut down!</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime1:=memo1.Lines.Count-4;
+         table1time:=strtoint(edit1.Text);
+         t1done:=false;
+      end;
+      //trig once end
+      inc(t1chashcnt);
+      cash1label.Caption:=cntcash(t1chashcnt)+' GEL';
+      edit1.Text:=inttostr(strtoint(edit1.Text)-1);
+      memo1.Lines[edittime1]:='<td>'+SecToTime(t1chashcnt)+'</td>';
+      memo1.Lines[edittime1+1]:='<td>'+cntcash(t1chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+      table1label.Caption:=timetolabeltabel1(strtoint(edit1.Text))
+   end else begin
+   //trig final
+       timer1.Enabled:=false;
+       switch10.Show;
+       switch11.Hide;
+       table1free.Show;
+       table1busy.Hide;
+       if forceclose1=true then begin
+          memo1.Lines[edittime1]:='<td><img src="warning.png" width="18"; height="18"; alt="Force shut down!" align="absMiddle">'+SecToTime(t1chashcnt)+'</td>';
+          memo1.Lines[edittime1+1]:='<td>'+cntcash(t1chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t1chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end else begin
+          memo1.Lines[edittime1]:='<td><img src="ok.png" width="18"; height="18"; alt="Successful shut down!" align="absMiddle">'+SecToTime(t1chashcnt)+'</td>';
+          memo1.Lines[edittime1+1]:='<td>'+cntcash(t1chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t1chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end;
+       forceclose1:=false;
+       ft1:=false;
+       table1label.Caption:='00:00:00';
+       cash1label.Caption:='+'+cntcash(t1chashcnt)+' GEL';
+       Comport1.WriteStr('5');
+       t1chashcnt:=0;
+       t1done:=true;
+       t1chashcnt:=0;
+   end;
+end;
+
+procedure TForm1.FormCreate(Sender: TObject);
+begin
+ft1:=false;
+ft2:=false;
+ft3:=false;
+ft4:=false;
+t1done:=true;
+t2done:=true;
+t3done:=true;
+t4done:=true;
+forceclose1:=false;
+forceclose2:=false;
+forceclose3:=false;
+forceclose4:=false;
+Memo1.Lines.LoadFromFile('all.html');
+totalcash:=strtofloat(memo1.Lines[1]);
+end;
+
+
+
+procedure TForm1.switch11Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+if strtoint(edit1.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch10.show;
+        switch11.Hide;
+        forceclose1:=true;
+        edit1.Text:='1';
+      end;
+      if selectedbtn=4 then begin
+         table1form.show;
+      end;
+end else
+   if table1form.CheckBox1.Checked=true then begin
+      switch11.Hide;
+      switch10.Show;
+      table1free.Show;
+      table1busy.Hide;
+      table1label.Caption:='00:00:00';
+      cash1label.Caption:='Time Cash';
+      timer6.Enabled:=false;
+      edittime1:=0;
+      table1form.CheckBox1.Checked:=false;
+      ComPort1.WriteStr('5');
+   end else
+if table1form.CheckBox2.Checked=true then begin
+    selectedbtn:=MessageDlg('Do you want to Stop Table - 1 VIP Time on '+table1label.Caption+'?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+    if selectedbtn=6 then begin
+        switch10.show;
+        switch11.Hide;
+        table1free.Show;
+        table1busy.Hide;
+        timer6.Enabled:=false;
+        table1label.Caption:='00:00:00';
+        table1form.CheckBox2.Checked:=false;
+        Comport1.WriteStr('5');
+        Showmessage('Table - 1 Cash='+cntcash(t1chashcnt)+' GEL');
+        cash1label.Caption:='+'+cntcash(t1chashcnt)+' GEL';
+        totalcash:=totalcash+strtofloat(cntcash(t1chashcnt));
+        memo1.Lines[1]:=floattostr(totalcash);
+        memo1.Lines.SaveToFile('all.html');
+        t1chashcnt:=0;
+        ft1:=false;
+    end;
+end;
+end;
+
+
+procedure TForm1.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
+begin
+  if MessageDlg('Really close this Application and complete turn off System?', mtConfirmation, [mbOk, mbCancel], 0)
+  = mrCancel then CanClose := False;
+end;
+
+procedure TForm1.historybtn1Click(Sender: TObject);
+begin
+ShellExecute(self.WindowHandle,'open','all.html',nil,nil, SW_SHOWNORMAL);
+end;
+
+procedure TForm1.switch20Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+   if strtoint(edit2.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch20.show;
+        switch21.Hide;
+      end;
+      if selectedbtn=4 then begin
+         table2form.show;
+      end;
+   end else
+      table2form.show;
+end;
+
+procedure TForm1.Timer2Timer(Sender: TObject);
+var
+   numline:string; i,num:integer;
+   today : TDateTime;
+begin
+   if strtoint(edit2.Text)>0 then  begin
+      //trig once
+      if ft2=false then   begin
+         Comport1.WriteStr('2');
+         switch21.show;
+         switch20.Hide;
+         table2busy.show;
+         table2free.Hide;
+         ft2:=true;
+         num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         if odd(num) then begin
+            memo1.Lines.Add('  <tr bgcolor="#9999CC">');
+         end else begin
+            memo1.Lines.Add('  <tr bgcolor="#669999">')
+         end;
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-2 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>The time could not be determined. crashed shut down!</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime2:=memo1.Lines.Count-4;
+         table2time:=strtoint(edit2.Text);
+         t2done:=false;
+      end;
+      //trig once end
+      inc(t2chashcnt);
+      cash2label.Caption:=cntcash(t2chashcnt)+' GEL';
+      memo1.Lines[edittime2]:='<td>'+SecToTime(t2chashcnt)+'</td>';
+      memo1.Lines[edittime2+1]:='<td>'+cntcash(t2chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+      edit2.Text:=inttostr(strtoint(edit2.Text)-1);
+      table2label.Caption:=timetolabeltabel2(strtoint(edit2.Text))
+   end else begin
+   //trig final
+       timer2.Enabled:=false;
+       switch20.Show;
+       switch21.Hide;
+       table2free.Show;
+       table2busy.Hide;
+        if forceclose2=true then begin
+          memo1.Lines[edittime2]:='<td><img src="warning.png" width="18"; height="18"; alt="Force shut down!" align="absMiddle">'+SecToTime(t2chashcnt)+'</td>';
+          memo1.Lines[edittime2+1]:='<td>'+cntcash(t2chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t2chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end else begin
+          memo1.Lines[edittime2]:='<td><img src="ok.png" width="18"; height="18"; alt="Successful shut down!" align="absMiddle">'+SecToTime(t2chashcnt)+'</td>';
+          memo1.Lines[edittime2+1]:='<td>'+cntcash(t2chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t2chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end;
+       forceclose2:=false;
+       ft2:=false;
+       table2label.Caption:='00:00:00';
+       Comport1.WriteStr('6');
+       t2done:=true;
+       t2chashcnt:=0;
+   end;
+end;
+
+procedure TForm1.switch21Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+if strtoint(edit2.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch20.show;
+        switch21.Hide;
+        forceclose2:=true;
+        edit2.Text:='1';
+      end;
+      if selectedbtn=4 then begin
+         table2form.show;
+      end;
+   end else
+      if  table2form.CheckBox1.Checked=true then begin
+         switch21.Hide;
+         switch20.Show;
+         table2free.Show;
+         table2busy.Hide;
+         table2label.Caption:='00:00:00';
+         cash2label.Caption:='Time Cash';
+         timer7.Enabled:=false;
+         edittime2:=0;
+         table2form.CheckBox1.Checked:=false;
+         ComPort1.WriteStr('6');
+      end;
+if table2form.CheckBox2.Checked=true then begin
+    selectedbtn:=MessageDlg('Do you want to Stop Table - 2 VIP Time on '+table2label.Caption+'?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+    if selectedbtn=6 then begin
+        switch20.show;
+        switch21.Hide;
+        table2free.Show;
+        table2busy.Hide;
+        timer7.Enabled:=false;
+        table2label.Caption:='00:00:00';
+        table2form.CheckBox2.Checked:=false;
+        ComPort1.WriteStr('6');
+        Showmessage('Table - 2 Cash='+cntcash(t2chashcnt)+' GEL');
+        cash2label.Caption:='+'+cntcash(t2chashcnt)+' GEL';
+        totalcash:=totalcash+strtofloat(cntcash(t2chashcnt));
+        memo1.Lines[1]:=floattostr(totalcash);
+        memo1.Lines.SaveToFile('all.html');
+        t2chashcnt:=0;
+        ft2:=false;
+    end;
+end;
+end;
+
+procedure TForm1.switch31Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+if strtoint(edit3.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch30.show;
+        switch31.Hide;
+        forceclose3:=true;
+        edit3.Text:='1';
+      end;
+      if selectedbtn=4 then begin
+         table3form.show;
+      end;
+   end else
+      if  table3form.CheckBox1.Checked=true then begin
+         switch31.Hide;
+         switch30.Show;
+         table3free.Show;
+         table3busy.Hide;
+         table3label.Caption:='00:00:00';
+         cash3label.Caption:='Time Cash';
+         timer8.Enabled:=false;
+         edittime3:=0;
+         table3form.CheckBox1.Checked:=false;
+         ComPort1.WriteStr('7');
+      end;
+if table3form.CheckBox2.Checked=true then begin
+    selectedbtn:=MessageDlg('Do you want to Stop Table - 3 VIP Time on '+table3label.Caption+'?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+    if selectedbtn=6 then begin
+        switch30.show;
+        switch31.Hide;
+        table3free.Show;
+        table3busy.Hide;
+        timer8.Enabled:=false;
+        table3label.Caption:='00:00:00';
+        table3form.CheckBox2.Checked:=false;
+        ComPort1.WriteStr('7');
+        Showmessage('Table - 3 Cash='+cntcash(t3chashcnt)+' GEL');
+        cash3label.Caption:='+'+cntcash(t3chashcnt)+' GEL';
+        totalcash:=totalcash+strtofloat(cntcash(t3chashcnt));
+        memo1.Lines[1]:=floattostr(totalcash);
+        memo1.Lines.SaveToFile('all.html');
+        t3chashcnt:=0;
+        ft3:=false;
+    end;
+end;
+end;
+
+procedure TForm1.switch30Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+   if strtoint(edit3.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch30.show;
+        switch31.Hide;
+      end;
+      if selectedbtn=4 then begin
+         table3form.show;
+      end;
+   end else
+      table3form.show;
+end;
+
+procedure TForm1.Timer3Timer(Sender: TObject);
+var
+   numline:string; i,num:integer;
+   today : TDateTime;
+begin
+   if strtoint(edit3.Text)>0 then  begin
+      //trig once
+      if ft3=false then   begin
+         Comport1.WriteStr('3');
+         switch31.show;
+         switch30.Hide;
+         table3busy.show;
+         table3free.Hide;
+         ft3:=true;
+         num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         if odd(num) then begin
+            memo1.Lines.Add('  <tr bgcolor="#9999CC">');
+         end else begin
+            memo1.Lines.Add('  <tr bgcolor="#669999">')
+         end;
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-3 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>The time could not be determined. crashed shut down!</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime3:=memo1.Lines.Count-4;
+         table3time:=strtoint(edit3.Text);
+         t3done:=false;
+      end;
+      //trig once end
+      inc(t3chashcnt);
+      cash3label.Caption:=cntcash(t3chashcnt)+' GEL';
+      memo1.Lines[edittime3]:='<td>'+SecToTime(t3chashcnt)+'</td>';
+      memo1.Lines[edittime3+1]:='<td>'+cntcash(t3chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+      edit3.Text:=inttostr(strtoint(edit3.Text)-1);
+      table3label.Caption:=timetolabeltabel3(strtoint(edit3.Text))
+   end else begin
+   //trig final
+       timer3.Enabled:=false;
+       switch30.Show;
+       switch31.Hide;
+       table3free.Show;
+       table3busy.Hide;
+       if forceclose3=true then begin
+          memo1.Lines[edittime3]:='<td><img src="warning.png" width="18"; height="18"; alt="Force shut down!" align="absMiddle">'+SecToTime(t3chashcnt)+'</td>';
+          memo1.Lines[edittime3+1]:='<td>'+cntcash(t3chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t3chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end else begin
+          memo1.Lines[edittime3]:='<td><img src="ok.png" width="18"; height="18"; alt="Successful shut down!" align="absMiddle">'+SecToTime(t3chashcnt)+'</td>';
+          memo1.Lines[edittime3+1]:='<td>'+cntcash(t3chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t3chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end;
+       forceclose3:=false;
+       ft3:=false;
+       table3label.Caption:='00:00:00';
+       Comport1.WriteStr('7');
+       t3done:=true;
+       t3chashcnt:=0;
+   end;
+end;
+
+procedure TForm1.switch40Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+   if strtoint(edit4.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch40.show;
+        switch41.Hide;
+      end;
+      if selectedbtn=4 then begin
+         table4form.show;
+      end;
+   end else
+      table4form.show;
+end;
+
+procedure TForm1.switch41Click(Sender: TObject);
+var
+selectedbtn:shortint;
+begin
+if strtoint(edit4.text)>0 then begin
+      selectedbtn:=MessageDlg('Are you sure that you want to Turn off table - 1',mtConfirmation,
+                              [mbYes,mbRetry,mbCancel], 0);
+      if selectedbtn=6 then begin
+        switch40.show;
+        switch41.Hide;
+        forceclose4:=true;
+        edit4.Text:='1';
+      end;
+      if selectedbtn=4 then begin
+         table4form.show;
+      end;
+   end else
+      if  table4form.CheckBox1.Checked=true then begin
+         switch41.Hide;
+         switch40.Show;
+         table4free.Show;
+         table4busy.Hide;
+         table4label.Caption:='00:00:00';
+         cash4label.Caption:='Time Cash';
+         timer9.Enabled:=false;
+         edittime4:=0;
+         table4form.CheckBox1.Checked:=false;
+         ComPort1.WriteStr('8');
+      end;
+if table4form.CheckBox2.Checked=true then begin
+    selectedbtn:=MessageDlg('Do you want to Stop Table - 4 VIP Time on '+table4label.Caption+'?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+    if selectedbtn=6 then begin
+        switch40.show;
+        switch41.Hide;
+        table4free.Show;
+        table4busy.Hide;
+        timer9.Enabled:=false;
+        table4label.Caption:='00:00:00';
+        table4form.CheckBox2.Checked:=false;
+        ComPort1.WriteStr('8');
+        Showmessage('Table - 4 Cash='+cntcash(t4chashcnt)+' GEL');
+        cash4label.Caption:='+'+cntcash(t4chashcnt)+' GEL';
+        totalcash:=totalcash+strtofloat(cntcash(t4chashcnt));
+        memo1.Lines[1]:=floattostr(totalcash);
+        memo1.Lines.SaveToFile('all.html');
+        t4chashcnt:=0;
+        ft4:=false;
+    end;
+end;
+end;
+
+procedure TForm1.Timer4Timer(Sender: TObject);
+var
+   numline:string; i,num:integer;
+   today : TDateTime;
+begin
+   if strtoint(edit4.Text)>0 then  begin
+      //trig once
+      if ft4=false then   begin
+         Comport1.WriteStr('4');
+         switch41.show;
+         switch40.Hide;
+         table4busy.show;
+         table4free.Hide;
+         ft4:=true;
+         num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         if odd(num) then begin
+            memo1.Lines.Add('  <tr bgcolor="#9999CC">');
+         end else begin
+            memo1.Lines.Add('  <tr bgcolor="#669999">')
+         end;
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-4 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>The time could not be determined. crashed shut down!</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime4:=memo1.Lines.Count-4;
+         table4time:=strtoint(edit4.Text);
+         t4done:=false;
+      end;
+      //trig once end
+      inc(t4chashcnt);
+      cash4label.Caption:=cntcash(t4chashcnt)+' GEL';
+      memo1.Lines[edittime4]:='<td>'+SecToTime(t4chashcnt)+'</td>';
+      memo1.Lines[edittime4+1]:='<td>'+cntcash(t4chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+      edit4.Text:=inttostr(strtoint(edit4.Text)-1);
+      table4label.Caption:=timetolabeltabel4(strtoint(edit4.Text))
+   end else begin
+   //trig final
+       timer4.Enabled:=false;
+       switch40.Show;
+       switch41.Hide;
+       table4free.Show;
+       table4busy.Hide;
+       if forceclose4=true then begin
+          memo1.Lines[edittime4]:='<td><img src="warning.png" width="18"; height="18"; alt="Force shut down!" align="absMiddle">'+SecToTime(t4chashcnt)+'</td>';
+          memo1.Lines[edittime4+1]:='<td>'+cntcash(t4chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t4chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end else begin
+          memo1.Lines[edittime4]:='<td><img src="ok.png" width="18"; height="18"; alt="Successful shut down!" align="absMiddle">'+SecToTime(t4chashcnt)+'</td>';
+          memo1.Lines[edittime4+1]:='<td>'+cntcash(t4chashcnt)+'</td>';
+          totalcash:=totalcash+strtofloat(cntcash(t4chashcnt));
+          memo1.Lines[1]:=floattostr(totalcash);
+          memo1.Lines.SaveToFile('all.html');
+       end;
+       forceclose4:=false;
+       ft4:=false;
+       table4label.Caption:='00:00:00';
+       Comport1.WriteStr('8');
+       t4done:=true;
+       t4chashcnt:=0;
+   end;
+end;
+
+procedure TForm1.aboutClick(Sender: TObject);
+begin
+   aboutform.show;
+end;
+
+procedure TForm1.historybtnClick(Sender: TObject);
+begin
+memo1.Lines[23]:=floattostr(totalcash);
+memo1.Lines.SaveToFile('all.html');
+Form7.show;
+end;
+
+procedure TForm1.clarehistorybtnClick(Sender: TObject);
+var selectedbtn:integer;
+begin
+if (t1done=true) and (t2done=true) and (t2done=true) and (t2done=true) then begin
+    selectedbtn:=MessageDlg('Are you sure that you want delete all history logs?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+    if selectedbtn=6 then begin
+       memo1.Lines.LoadFromFile('default.html');
+       memo1.Lines.SaveToFile('all.html');
+       totalcash:=0;
+       Showmessage('All history Logs are Deleted');
+   end;
+end else
+  Showmessage('Wait for Tables timeout')
+end;
+
+procedure TForm1.Timer5Timer(Sender: TObject);
+var
+realtime : TDateTime;
+begin
+realtime:= Time;
+txttimes.Caption:=Timetostr(realtime);
+end;
+
+procedure TForm1.loginbtnClick(Sender: TObject);
+var
+  selectedbtn:shortint;
+begin
+if not FileExists('admin.dat') then begin
+   selectedbtn:=MessageDlg('Can not opened admin Log. My it is Deleted or no exists.'+#13#10+' Do you want Create New Admin Account?',mtConfirmation,
+                              [mbYes,mbCancel], 0);
+   if selectedbtn=6 then
+      form10.show;
+end else begin
+   if loginadmin.Checked=false then
+      Form9.show;
+end;
+end;
+
+procedure TForm1.logoutbtnClick(Sender: TObject);
+begin
+logoutbtn.Hide;
+loginbtn.Show;
+historyframe.Hide;
+historybtn.Hide;
+historyback.Show;
+clarehistorybtn.Hide;
+admin.Hide;
+form9.Edit1.Text:='admin';
+form9.Edit2.Text:='pass';
+loginadmin.Checked:=false;
+end;
+
+procedure TForm1.Timer6Timer(Sender: TObject);
+var
+today : TDateTime;
+i,num:integer;   numline:string;
+begin
+   inc(t1chashcnt);
+   table1label.Caption:=timetolabeltabel1(t1chashcnt);
+   if (table1form.CheckBox1.Checked=false) and (table1form.CheckBox2.Checked=true) then begin
+      if ft1=false then begin
+         num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         memo1.Lines.Add('  <tr bgcolor="#ea6161">');
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-1 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>Runtime</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime1:=memo1.Lines.Count-4;
+         ft1:=true;
+      end;
+      memo1.Lines[edittime1]:='<td><img src="vip.png" width="18"; height="18"; alt="VIP Time" align="absMiddle">'+SecToTime(t1chashcnt)+'</td>';
+      memo1.Lines[edittime1+1]:='<td>'+cntcash(t1chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+      cash1label.Caption:=cntcash(t1chashcnt)+' GEL';
+
+   end;
+end;
+
+procedure TForm1.Timer7Timer(Sender: TObject);
+var
+today : TDateTime;
+i,num:integer; numline:string;
+begin
+   inc(t2chashcnt);
+   table2label.Caption:=timetolabeltabel2(t2chashcnt);
+   if (table2form.CheckBox1.Checked=false) and (table2form.CheckBox2.Checked=true) then begin
+      if ft2=false then begin
+      num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         memo1.Lines.Add('  <tr bgcolor="#ea6161">');
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-2 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>Runtime</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime2:=memo1.Lines.Count-4;
+         ft2:=true;
+      end;
+      cash2label.Caption:=cntcash(t2chashcnt)+' GEL';
+      memo1.Lines[edittime2]:='<td><img src="vip.png" width="18"; height="18"; alt="VIP Time" align="absMiddle">'+SecToTime(t2chashcnt)+'</td>';
+      memo1.Lines[edittime2+1]:='<td>'+cntcash(t2chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+   end;
+end;
+
+procedure TForm1.Timer8Timer(Sender: TObject);
+var
+today : TDateTime;
+i,num:integer; numline:string;
+begin
+   inc(t3chashcnt);
+   table3label.Caption:=timetolabeltabel3(t3chashcnt);
+   if (table3form.CheckBox1.Checked=false) and (table3form.CheckBox2.Checked=true) then begin
+      if ft3=false then begin
+      num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         memo1.Lines.Add('  <tr bgcolor="#ea6161">');
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-3 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>Runtime</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime3:=memo1.Lines.Count-4;
+         ft3:=true;
+      end;
+      cash3label.Caption:=cntcash(t3chashcnt)+' GEL';
+      memo1.Lines[edittime3]:='<td><img src="vip.png" width="18"; height="18"; alt="VIP Time" align="absMiddle">'+SecToTime(t3chashcnt)+'</td>';
+      memo1.Lines[edittime3+1]:='<td>'+cntcash(t3chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+   end;
+end;
+
+procedure TForm1.Timer9Timer(Sender: TObject);
+var
+today : TDateTime;
+i,num:integer; numline:string;
+begin
+   inc(t4chashcnt);
+   table4label.Caption:=timetolabeltabel4(t4chashcnt);
+   if (table4form.CheckBox1.Checked=false) and (table4form.CheckBox2.Checked=true) then begin
+      if ft4=false then begin
+      num:=0;
+         numline:=memo1.Lines[0];
+         for i := 5 to length(numline) do
+            num:=num*10+strtoint(numline[i]);
+         num:=num+1;
+         memo1.Lines[0]:='<!--'+inttostr(num);
+         memo1.Lines.Delete(memo1.Lines.Count-1);
+         memo1.Lines.Add('  <tr bgcolor="#ea6161">');
+         today := Time;
+         memo1.Lines.Add('  <td align="center"> T-4 </td>');
+         memo1.Lines.Add('   <td>'+TimeToStr(today)+' / '+DateToStr(Date)+'</td>');
+         memo1.Lines.Add('<td>Runtime</td>');
+         memo1.Lines.Add('<td>0 GEL</td>');
+         memo1.Lines.Add('</tr>');
+         memo1.Lines.Add('</table>');
+         memo1.Lines.SaveToFile('all.html');
+         edittime4:=memo1.Lines.Count-4;
+         ft4:=true;
+      end;
+      cash4label.Caption:=cntcash(t4chashcnt)+' GEL';
+      memo1.Lines[edittime4]:='<td><img src="vip.png" width="18"; height="18"; alt="VIP Time" align="absMiddle">'+SecToTime(t4chashcnt)+'</td>';
+      memo1.Lines[edittime4+1]:='<td>'+cntcash(t4chashcnt)+'</td>';
+      memo1.Lines.SaveToFile('all.html');
+   end;
+end;
+
+procedure TForm1.adminClick(Sender: TObject);
+begin
+   form11.show;   
+end;
+
+
+
+end.
